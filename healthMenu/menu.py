@@ -1,9 +1,10 @@
 #! /usr/local/env python3
 # -*- coding: utf-8 -*-
+# Author: v.stone@163.com
 
 
 import random
-from pprint import pprint
+import sys
 
 
 class MenuItem(object):
@@ -389,7 +390,21 @@ class Menu(object):
         return self.menu_week
 
     def monthly_menu(self):
-        print(u'\n===== 一月菜单 =====')
+        # print(u'\n===== 一月菜单 =====')
+        for month_day in range(1, 31):
+            self.daily_menu('%s号' % month_day)
+        return self.menu_week
+
+
+def main():
+    hmenu = Menu()
+    if sys.argv[1:] and sys.argv[1] == "-w":
+        hmenu.weekly_menu()
+    elif sys.argv[1:] and sys.argv[1] == "-m":
+        hmenu.monthly_menu()
+    else:
+        hmenu.daily_menu()
+    return True
 
 
 if __name__ == '__main__':
