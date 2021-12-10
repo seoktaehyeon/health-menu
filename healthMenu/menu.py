@@ -311,6 +311,7 @@ class Menu(object):
         self.menu_week = list()
         self.menu_month = list()
         self.staples = list()
+        self.shopping_list = list()
 
     def get_staple(self):
         while True:
@@ -364,6 +365,9 @@ class Menu(object):
             self.menu_day[menu_name].append(random.choice(items))
         return True
 
+    def add_into_shopping_list(self):
+        pass
+
     def daily_menu(self, week_day=None):
         if week_day:
             print(u'\n===== %s菜单 =====' % week_day)
@@ -387,13 +391,15 @@ class Menu(object):
         # print(u'\n===== 一周菜单 =====')
         for week_day in [u'周一', u'周二', u'周三', u'周四', u'周五', u'周六', u'周日']:
             self.daily_menu(week_day)
+            self.menu_week.append(self.menu_day)
         return self.menu_week
 
     def monthly_menu(self):
         # print(u'\n===== 一月菜单 =====')
         for month_day in range(1, 31):
             self.daily_menu('%s号' % month_day)
-        return self.menu_week
+            self.menu_month.append(self.menu_day)
+        return self.menu_month
 
 
 def main():
