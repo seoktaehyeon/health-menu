@@ -382,7 +382,7 @@ class Menu(object):
         # for items in self.items.lunch_list:
         #     self.menu_day[menu_name].append(random.choice(items))
         for i in range(0, len(self.items.lunch_list)):
-            if len(self.lunches_items[i]) > 3:
+            if len(self.lunches_items[i]) > 2:
                 self.menu_day[menu_name].append(random.choice(self.lunches_items[i]))
             else:
                 _item = random.choice(self.items.lunch_list[i])
@@ -408,7 +408,7 @@ class Menu(object):
         # for items in self.items.dinner_list:
         #     self.menu_day[menu_name].append(random.choice(items))
         for i in range(0, len(self.items.dinner_list)):
-            if len(self.dinners_items[i]) > 3:
+            if len(self.dinners_items[i]) > 2:
                 self.menu_day[menu_name].append(random.choice(self.dinners_items[i]))
             else:
                 _item = random.choice(self.items.dinner_list[i])
