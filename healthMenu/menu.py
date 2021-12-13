@@ -319,6 +319,9 @@ class Menu(object):
         self.mornings_items = list()
         for i in range(0, len(self.items.morning_tea_list)):
             self.mornings_items.append(list())
+        self.lunches_items = list()
+        for i in range(0, len(self.items.lunch_list)):
+            self.lunches_items.append(list())
         self.shopping_items = dict()
         self.shopping_list = list()
 
@@ -367,8 +370,15 @@ class Menu(object):
     def get_lunch(self):
         menu_name = u'中餐'
         self.menu_day[menu_name].append(self.get_staple())
-        for items in self.items.lunch_list:
-            self.menu_day[menu_name].append(random.choice(items))
+        # for items in self.items.lunch_list:
+        #     self.menu_day[menu_name].append(random.choice(items))
+        for i in range(0, len(self.items.lunch_list)):
+            if len(self.lunches_items[i]) > 3:
+                self.menu_day[menu_name].append(random.choice(self.lunches_items[i]))
+            else:
+                _item = random.choice(self.items.lunch_list[i])
+                self.menu_day[menu_name].append(_item)
+                self.lunches_items[i].append(_item)
         return True
 
     def get_afternoon_tea(self):
