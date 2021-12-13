@@ -313,6 +313,9 @@ class Menu(object):
         self.menu_month = list()
         self.staples = list()
         self.staples_items = list()
+        self.breakfasts_items = list()
+        for i in range(0, len(self.items.breakfast_list)):
+            self.breakfasts_items.append(list())
         self.shopping_items = dict()
         self.shopping_list = list()
 
@@ -336,8 +339,16 @@ class Menu(object):
         self.menu_day = menu_day_item.menu
         self.times = menu_day_item.times
         self.menu_day[menu_name].append(self.get_staple())
-        for items in self.items.breakfast_list:
-            self.menu_day[menu_name].append(random.choice(items))
+        for i in range(0, len(self.breakfasts_items)):
+            if len(self.breakfasts_items[i]) > 2:
+                self.menu_day[menu_name].append(random.choice(self.breakfasts_items[i]))
+            else:
+                _item = random.choice(self.items.breakfast_list[i])
+                self.menu_day[menu_name].append(_item)
+                self.breakfasts_items[i].append(_item)
+        # for items in self.items.breakfast_list:
+        #     random.choice(items)
+        #     self.menu_day[menu_name].append(random.choice(items))
         return True
 
     def get_morning_tea(self):
