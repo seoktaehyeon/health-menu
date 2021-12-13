@@ -312,10 +312,13 @@ class Menu(object):
         self.menu_week = list()
         self.menu_month = list()
         self.staples = list()
+        self.staples_items = list()
         self.shopping_items = dict()
         self.shopping_list = list()
 
     def get_staple(self):
+        if len(self.staples_items) > 5:
+            return random.choice(self.staples_items)
         while True:
             _staples = random.choice(self.items.staple_list)
             if _staples != self.staples:
@@ -323,6 +326,7 @@ class Menu(object):
                 break
             print(u'类别重复了，重新搭配')
         _staple = random.choice(_staples)
+        self.staples_items.append(_staple)
         # _staples.remove(_staple)
         return _staple
 
