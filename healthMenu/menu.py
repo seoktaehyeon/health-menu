@@ -5,6 +5,7 @@
 
 import random
 import sys
+from math import ceil
 
 
 class MenuItem(object):
@@ -121,7 +122,7 @@ class MenuItem(object):
             ], [
                 {u"名称": u"无糖酸奶", u"数量": u"1盒", u"克重": u"", u"图片": u""},
                 {u"名称": u"脱脂奶", u"数量": u"1盒", u"克重": u"", u"图片": u""},
-                {u"名称": u"无糖豆浆", u"数量": u"1杯", u"克重": u"", u"图片": u""},
+                {u"名称": u"无糖豆浆", u"数量": u"1杯", u"克重": u"500g", u"图片": u""},
             ], [
                 {u"名称": u"叶菜", u"数量": u"1份", u"克重": u"150g", u"图片": u"", u'备注': u'可不吃'},
                 {u"名称": u"黄瓜", u"数量": u"1份", u"克重": u"150g", u"图片": u"", u'备注': u'可不吃'},
@@ -311,6 +312,7 @@ class Menu(object):
         self.menu_week = list()
         self.menu_month = list()
         self.staples = list()
+        self.shopping_items = dict()
         self.shopping_list = list()
 
     def get_staple(self):
@@ -365,8 +367,47 @@ class Menu(object):
             self.menu_day[menu_name].append(random.choice(items))
         return True
 
-    def add_into_shopping_list(self):
-        pass
+    def add_into_shopping_list(self, shopping_item):
+        item_name = shopping_item[u'名称']
+        if shopping_item[u'克重']:
+            item_unit = shopping_item[u'克重'].lower()[-1]
+            item_count = shopping_item[u'克重'].lower().split(item_unit)[0].split('-')
+        else:
+            item_unit = shopping_item[u'数量'].lower()[-1]
+            item_count = shopping_item[u'数量'].lower().split(item_unit)[0].split('-')
+        if self.shopping_items.get(item_name) is None:
+            self.shopping_items[item_name] = [0, 0, item_unit]
+        if len(item_count) == 0:
+            item_count = [0, 0]
+        elif len(item_count) == 1:
+            if item_count[0] == u'半':
+                item_count[0] = 0.5
+                item_count.append(0.5)
+            elif '/' in item_count[0]:
+                item_count.append(eval(item_count[0]))
+            else:
+                item_count.append(item_count[0])
+        self.shopping_items[item_name][0] += ceil(float(item_count[0]))
+        self.shopping_items[item_name][1] += ceil(float(item_count[1]))
+        return True
+
+    def summarize_shopping_list(self):
+        print('\n===== 采购清单 =====')
+        for shopping_item in self.shopping_items:
+            item_min, item_max, item_unit = self.shopping_items[shopping_item]
+            if item_min == item_max:
+                print('%s\t%s%s' % (shopping_item, item_min, item_unit))
+                self.shopping_list.append({
+                    u"名称": shopping_item,
+                    u"采购量": '%s%s' % (item_min, item_unit)
+                })
+            else:
+                print('%s\t%s-%s%s' % (shopping_item, item_min, item_max, item_unit))
+                self.shopping_list.append({
+                    u"名称": shopping_item,
+                    u"采购量": '%s-%s%s' % (item_min, item_max, item_unit)
+                })
+        return self.shopping_list
 
     def daily_menu(self, week_day=None):
         if week_day:
@@ -385,6 +426,7 @@ class Menu(object):
                 if item.get(u'名称'):
                     item_comment = '(%s)' % item.get(u'备注') if item.get(u'备注') else ''
                     print('\t%s\t%s\t%s\t%s' % (item[u'数量'], item[u'名称'], item[u'克重'], item_comment))
+                    self.add_into_shopping_list(shopping_item=item)
         return self.menu_day
 
     def weekly_menu(self):
@@ -395,7 +437,7 @@ class Menu(object):
         return self.menu_week
 
     def monthly_menu(self):
-        # print(u'\n===== 一月菜单 =====')
+        # print(u'\n===== 一个月菜单 =====')
         for month_day in range(1, 31):
             self.daily_menu('%s号' % month_day)
             self.menu_month.append(self.menu_day)
@@ -410,6 +452,7 @@ def main():
         hmenu.monthly_menu()
     else:
         hmenu.daily_menu()
+    hmenu.summarize_shopping_list()
     return True
 
 
